@@ -1,0 +1,61 @@
+{
+    "log": {
+        "loglevel": "warning"
+    },
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "ip": [
+                    "geoip:private"
+                ],
+                "outboundTag": "block"
+            }
+        ]
+    },
+    "inbounds": [
+        {
+            "listen": "0.0.0.0",
+            "port": $PORT,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "$CID"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "security": "none"
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "tag": "direct"
+        },
+        {
+            "protocol": "blackhole",
+            "tag": "block"
+        }
+    ],
+   "transport": {
+    "tcpSettings": {},
+    "kcpSettings": {},
+    "wsSettings": {
+        "acceptProxyProtocol": false,
+        "path": "/ffqq",
+        "headers": {},
+        "maxEarlyData": 1024,
+        "useBrowserForwarding": false,
+        "earlyDataHeaderName":""
+    },
+    "httpSettings": {},
+    "quicSettings": {},
+    "dsSettings": {},
+    "grpcSettings": {}
+   }
+}
