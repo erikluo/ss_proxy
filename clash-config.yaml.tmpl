@@ -1,7 +1,7 @@
 # kubetpl:syntax:$
 
-port: 7890
-socks-port: 7891
+port: 1081
+socks-port: 1080
 
 allow-lan: false
 
@@ -57,19 +57,19 @@ proxies:
     server: $VMESS_SERVER
     port: $VMESS_PORT
     uuid: $UUID 
-    alterId: 32
+    alterId: 0
     cipher: auto
     # udp: true
-    # tls: true
-    # skip-cert-verify: true
-    # servername: example.com # priority over wss host
+    tls: true
+    skip-cert-verify: false
+    servername: $VMESS_HOST # priority over wss host
     network: ws
-    # ws-opts:
-    #   path: /path
-    #   headers:
-    #     Host: v2ray.com
-    #   max-early-data: 2048
-    #   early-data-header-name: Sec-WebSocket-Protocol
+    ws-opts:
+      path: $WS_PATH
+      headers:
+        Host: $VMESS_HOST
+      max-early-data: 1024
+      early-data-header-name: ""
 
 
 proxy-groups:
@@ -82,23 +82,23 @@ proxy-groups:
   - name: "auto"
     type: url-test
     proxies:
+      - vmess
       - ss3
-      #- vmess
+     
     url: 'http://www.gstatic.com/generate_204'
     interval: 300
 
   - name: "fallback-auto"
     type: fallback
     proxies:
-      - ss3
       - vmess
+      - ss3
     url: 'http://www.gstatic.com/generate_204'
     interval: 300
 
   - name: "load-balance"
     type: load-balance
     proxies:
-      - ss3
       - vmess
     url: 'http://www.gstatic.com/generate_204'
     interval: 300
@@ -108,7 +108,7 @@ proxy-groups:
     type: select
     disable-udp: true
     proxies:
-      - ss3
+      - vmess
 rules:
   - DOMAIN-SUFFIX,google.com,auto
   - DOMAIN-KEYWORD,google,auto
